@@ -40,8 +40,8 @@ def process_position(json):
         #print(face["faceLandmarks"]["pupilLeft"]["y"])
         #print(face["faceLandmarks"]["pupilRight"]["x"])
         #print(face["faceLandmarks"]["pupilRight"]["y"])
-        print(face["faceLandmarks"]["noseTip"]["x"])
-        print(face["faceLandmarks"]["noseTip"]["y"])
+        print("NOSE X:", face["faceLandmarks"]["noseTip"]["x"])
+        print("NOSE Y:", face["faceLandmarks"]["noseTip"]["y"])
         #leftx = face["faceLandmarks"]["pupilLeft"]["x"]
         #lefty=face["faceLandmarks"]["pupilLeft"]["y"]
         #rightx = face["faceLandmarks"]["pupilRight"]["x"]
@@ -102,7 +102,7 @@ class Capture(object):
             if len(self.video) % 10 == 0:
                 i = len(self.video)
                 vid = self.video[i-1]
-                print(i)
+                print("FRAME:", i)
                 #v = pygame.surfarray.pixels2d(self.video[i-1])
                 data = pygame.image.tostring(self.video[i-1], 'RGBA')
                 pil_image = Image.frombytes("RGBA", self.size, data)
