@@ -67,13 +67,13 @@ def process_position(json):
             print("LEFT TURN")
         if rightx < midx:
             print("RIGHT TURN")"""
-        if x > midx:
+        if x-THRESH > midx:
             print("LEFT TURN")
-        if x < midx:
+        if x+THRESH < midx:
             print("RIGHT TURN")
-        if y > midy:
+        if y-THRESH > midy:
             print("DOWN TURN")
-        if y < midy:
+        if y+THRESH < midy:
             print("UP TURN")
 
     except:
