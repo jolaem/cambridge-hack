@@ -369,7 +369,7 @@ while True: # main game loop
                     break
 
          
-            elif flag_right == True  and curr_segment_direction == Direction.RIGHT:
+            if flag_right == True  and curr_segment_direction == Direction.RIGHT:
                 X += speed
                 if X>=curr_path.path[curr_segment].x_end:
                     X = curr_path.path[curr_segment].x_end
@@ -379,7 +379,7 @@ while True: # main game loop
                         game_finished = 1
                     break
 
-            elif flag_up == True  and curr_segment_direction == Direction.UP:
+            if flag_up == True  and curr_segment_direction == Direction.UP:
                 print flag_up
                 Y -= speed
                 if Y<=curr_path.path[curr_segment].y_end:
@@ -389,9 +389,8 @@ while True: # main game loop
                         curr_segment -=1                        
                         game_finished = 1
                     break
-   
 
-            elif flag_down == True  and curr_segment_direction == Direction.DOWN:
+            if flag_down == True  and curr_segment_direction == Direction.DOWN:
                 Y += speed
                 if Y>=curr_path.path[curr_segment].y_end:
                     Y = curr_path.path[curr_segment].y_end 
@@ -400,7 +399,8 @@ while True: # main game loop
                         curr_segment -=1
                         game_finished = 1
                     break
-            elif flag_jump == True and curr_segment_direction == Direction.JUMP:
+
+            if flag_jump == True and curr_segment_direction == Direction.JUMP:
                 Y = curr_path.path[curr_segment].y_end
                 X = curr_path.path[curr_segment].x_end 
 
@@ -415,12 +415,12 @@ while True: # main game loop
     import glob, os
 
     files = [file for file in glob.glob("*.txt")]
-    print files
+    #print files
     if len(files) > 0:
         files.sort()
+        #print files
         try:
             for f in files:
-                print f
                 with open(f, 'r') as new:
                     instructions = new.read()
                     # execute instruction
@@ -444,7 +444,7 @@ while True: # main game loop
                         ctypes.windll.user32.MessageBoxW(0, "Well done", "Message", 1)
                         pygame.quit()
                         sys.exit()
-                    time.sleep(1)
+     #               time.sleep(1)
 
                     for event in pygame.event.get():
                         if event.type == QUIT:
@@ -456,7 +456,7 @@ while True: # main game loop
 
         except:
             pass
-
+    #flag_up = True
     """flag_activate = False
     flag_activate = True#JolaOP_switch
     flag_left = False#JolaOP_left
