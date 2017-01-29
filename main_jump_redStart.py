@@ -1,7 +1,8 @@
 import pygame, sys
 from pygame.locals import *
 from random import randint
-
+import time
+import ctypes
 
 
 def get_pair(moveNum):
@@ -14,12 +15,13 @@ def get_pair(moveNum):
 def randomise_dir_length(dir_low,dir_high,num,len_low, len_high):
 	dir_arr = []
 	len_arr = []
-	N_prev = 1
-
+	N_prev = 2
+	dir_arr.append(N_prev)
+	len_arr.append(2)
 	for i in range(num):
 		N = randint(dir_low,dir_high)
 		
-		if N != get_pair(N_prev):			
+		if N != get_pair(N_prev) and N != N_prev:			
 				N_len = randint(len_low,len_high)
 				N_prev = N
 				dir_arr.append(N)
@@ -34,6 +36,7 @@ def randomise_dir_length(dir_low,dir_high,num,len_low, len_high):
 				N_prev = N
 		
 	return dir_arr, len_arr
+
 
 
     
@@ -255,8 +258,15 @@ class PATHWAY(object):
             self.path[n].draw(game_display,X,Y,color)
 
         partial_seg = self.path[curr_seg].create_partial_segment(X_pos,Y_pos)
+        
 
         partial_seg.draw(game_display,X,Y,color)
+
+        if(max(0,min_segment)==0):
+            circle_begin = self.path[0].circle_begin
+            game_display.draw.circle(DISPLAYSURF, RED, (circle_begin.center_x+X, circle_begin.center_y+Y), circle_begin.radius, 0)
+
+            
         
 
 
@@ -266,15 +276,16 @@ pygame.init()
 BLUE =  (150, 255, 255)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+#RED = (155,20,20)
+RED = (245,151,69) #orage actually
 
-DARK_BLUE =  (40, 200, 200)
-
-
+#DARK_BLUE =  (40, 140, 140)
+DARK_BLUE =  (7,99,13) #dark green actually
 
 
 DISPLAYSURF = pygame.display.set_mode((800, 600))
-DISPLAYSURF.fill(BLUE)
-
+bg_image = pygame.image.load('grassLand.jpg')
+DISPLAYSURF.blit(bg_image,(0,0))
 
 
 pygame.key.set_repeat (500, 30)
@@ -302,7 +313,7 @@ thickness = 200
 curr_path = PATHWAY(path_directions,path_lengths,x_start,y_start,thickness)
 
 obj_image = pygame.image.load('Football.png')
-newSize = 180
+newSize = 200
 obj_image = pygame.transform.scale(obj_image,(newSize,newSize))
 
 speed = 10
@@ -319,7 +330,7 @@ pygame.display.set_caption('Hello World!')
 while True: # main game loop
     for event in pygame.event.get():
 
-        DISPLAYSURF.fill(BLUE)
+        DISPLAYSURF.blit(bg_image, (0,0))
 
         #pygame.draw.rect(DISPLAYSURF, WHITE, (A.line.x_left+X, A.line.y_up+Y, A.line.x_length , A.line.y_length))
         #pygame.draw.circle(DISPLAYSURF, WHITE, (A.circle_end.center_x+X, A.circle_end.center_y+Y), A.circle_end.radius, 0)
@@ -330,7 +341,7 @@ while True: # main game loop
         #DISPLAYSURF.blit(obj_image,(x_start-int(thickness/2),y_start-200))
         if curr_segment < n_segment:
             curr_path.draw_partial_range(pygame,-(X-x_start),-(Y-y_start),X,Y,curr_segment-2,curr_segment,DARK_BLUE)
-
+        DISPLAYSURF.blit(obj_image, (x_start-int(200/2),y_start-int(200/2)))
 
         
         if event.type == QUIT:
@@ -395,6 +406,9 @@ while True: # main game loop
                
     pygame.display.update()
 
-
+    if game_finished:
+        ctypes.windll.user32.MessageBoxW(0, "Well done", "Message", 1)
+        pygame.quit()
+        sys.exit()
 
     

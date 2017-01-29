@@ -13,68 +13,10 @@ from pygame.locals import *
 pygame.init()
 pygame.camera.init()
 
-THRESH = 50
-
-def process_emotion(json):
-
-    try:
-        face = json[0]
-
-        print("HAPPINESS:", face['scores']['happiness'])
-        print("SURPRISE:", face['scores']['surprise'])
-
-    except:
-        pass
-
-def process_position(json):
-
-    midx = 380
-    midy = 230
-
-    try:
-        face = json[0]
-
-        print("MIDX:", midx)  # , "MIDY:", midy)
-
-        #print(face["faceLandmarks"]["pupilLeft"]["x"])
-        #print(face["faceLandmarks"]["pupilLeft"]["y"])
-        #print(face["faceLandmarks"]["pupilRight"]["x"])
-        #print(face["faceLandmarks"]["pupilRight"]["y"])
-        print("NOSE X:", face["faceLandmarks"]["noseTip"]["x"])
-        print("NOSE Y:", face["faceLandmarks"]["noseTip"]["y"])
-        #leftx = face["faceLandmarks"]["pupilLeft"]["x"]
-        #lefty=face["faceLandmarks"]["pupilLeft"]["y"]
-        #rightx = face["faceLandmarks"]["pupilRight"]["x"]
-        #righty=face["faceLandmarks"]["pupilRight"]["y"]
-        x = face["faceLandmarks"]["noseTip"]["x"]
-        y = face["faceLandmarks"]["noseTip"]["y"]
-
-        # left turn
-        """if leftx > midx:
-            print("LEFT TURN")
-        if rightx < midx:
-            print("RIGHT TURN")"""
-        if x-THRESH > midx:
-            print("LEFT TURN")
-        if x+THRESH < midx:
-            print("RIGHT TURN")
-        if y-THRESH > midy:
-            print("DOWN TURN")
-        if y+THRESH < midy:
-            print("UP TURN")
-
-    except:
-        pass
-
-        #left pup: y more x less
-        #right pup: y less x less
-        # right turn
-        #left pup: y less x more
-        #right pup: y more x more
-
 
 class Capture(object):
     def __init__(self):
+        self.frame=0
         self.size = (640,480)
         # create a display surface. standard pygame stuff
         self.display = pygame.display.set_mode(self.size, 0)
@@ -91,6 +33,76 @@ class Capture(object):
         # create a surface to capture to.  for performance purposes
         # bit depth is the same as that of the display surface.
         self.snapshot = pygame.surface.Surface(self.size, 0, self.display)
+
+        self.THRESH = 50
+        self.activate = False
+        self.jump = False
+        self.left = False
+        self.right = False
+        self.up = False
+        self.down = False
+
+    def process_emotion(self, json):
+        try:
+            face = json[0]
+
+            print("HAPPINESS:", face['scores']['happiness'])
+            print("SURPRISE:", face['scores']['surprise'])
+            if face['scores']['surprise'] > 0.5:
+                print("JUMP")
+                self.activate = True
+                self.jump = True
+
+        except:
+            pass
+
+    def process_position(self, json):
+
+        midx = 380
+        midy = 230
+
+        try:
+            face = json[0]
+
+            print("MIDX:", midx)  # , "MIDY:", midy)
+
+            # print(face["faceLandmarks"]["pupilLeft"]["x"])
+            # print(face["faceLandmarks"]["pupilLeft"]["y"])
+            # print(face["faceLandmarks"]["pupilRight"]["x"])
+            # print(face["faceLandmarks"]["pupilRight"]["y"])
+            print("NOSE X:", face["faceLandmarks"]["noseTip"]["x"])
+            print("NOSE Y:", face["faceLandmarks"]["noseTip"]["y"])
+            # leftx = face["faceLandmarks"]["pupilLeft"]["x"]
+            # lefty=face["faceLandmarks"]["pupilLeft"]["y"]
+            # rightx = face["faceLandmarks"]["pupilRight"]["x"]
+            # righty=face["faceLandmarks"]["pupilRight"]["y"]
+            x = face["faceLandmarks"]["noseTip"]["x"]
+            y = face["faceLandmarks"]["noseTip"]["y"]
+
+            # left turn
+            """if leftx > midx:
+                print("LEFT TURN")
+            if rightx < midx:
+                print("RIGHT TURN")"""
+            if x - self.THRESH > midx:
+                print("LEFT TURN")
+                self.left = True
+                self.activate = True
+            if x + self.THRESH < midx:
+                print("RIGHT TURN")
+                self.right = True
+                self.activate = True
+            if y - self.THRESH > midy:
+                print("DOWN TURN")
+                self.down = True
+                self.activate = True
+            if y + self.THRESH < midy:
+                print("UP TURN")
+                self.up = True
+                self.activate = True
+
+        except:
+            pass
 
     def get_and_flip(self):
         # if you don't want to tie the framerate to the camera, you can check 
@@ -111,8 +123,15 @@ class Capture(object):
                 pil_image.save(zdata, 'JPEG')
                 result_pos = get_faces_frame(zdata.getvalue())
                 result_emo = get_emotions_frame(zdata.getvalue())
-                process_position(result_pos)
-                process_emotion(result_emo)
+                self.process_position(result_pos)
+                self.process_emotion(result_emo)
+
+                self.frame += 1
+                with open(str(self.frame)+'.txt', 'w') as file:
+                    file.write(str([self.activate, self.left, self.right, self.up, self.down, self.jump]))
+                self.activate=False; self.left=False; self.right=False; self.up=False;
+                self.down=False; self.jump=False
+
 
 
         # blit it to the display surface.  simple!

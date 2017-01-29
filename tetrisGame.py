@@ -18,6 +18,8 @@ TETRA_CHOICES=(1,4)
 GRID_SIZE_X=12
 GRID_SIZE_Y=20
 #0 to 400
+ACTIVATE2 = pygame.USEREVENT + 1
+ACTIVATE = pygame.event.Event(ACTIVATE2, {})
 
 ########NOTE:
 ########    Blocks are the 1x1 blocks, the one that makes up the grid
@@ -91,6 +93,50 @@ class Game(object):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
+        import glob, os
+        files = [file for file in glob.glob("*.txt")]
+        if len(files) > 0:
+            files.sort()
+            try:
+                for f in files:
+                    with open(f, 'r') as new:
+                        instructions = new.read()
+                        # execute instruction
+                        inst = instructions[1:-1].split(', ')
+                        print "INSTRUCTIONS:", inst
+                        flag_activate = inst[0]  # JolaOP_switch
+                        flag_activate = flag_activate == 'True'
+                        flag_left = inst[1]  # JolaOP_left
+                        flag_left = flag_left == 'True'
+                        flag_right = inst[2]  # JolaOP_right
+                        flag_right = flag_right == 'True'
+                        flag_up = inst[3]  # JolaOP_up
+                        flag_up = flag_up == 'True'
+                        flag_down = inst[4]  # JolaOP_down
+                        flag_down = flag_down == 'True'
+
+                        if flag_left:
+                            self.moveTetra("left")
+                        if flag_right:
+                            self.moveTetra("right")
+                        if flag_up:
+                            self.rotateTetra()
+                        if flag_down:
+                            self.moveTetra("straight down")
+
+                        pygame.time.set_timer(pygame.KEYDOWN, WAITING_TIME)
+
+                        # delete instruction
+                        os.remove(f)
+
+            except:
+                pass
+        return True
+
+
+        """for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
             elif event.type==pygame.KEYDOWN and self.current_tetra:
                 if event.key==pygame.K_RIGHT:
                     self.moveTetra("right")
@@ -103,7 +149,7 @@ class Game(object):
                 elif event.key==pygame.K_UP:
                     self.rotateTetra()
                 pygame.time.set_timer(pygame.KEYDOWN, WAITING_TIME)
-        return True
+        return True"""
 
     def removeBlocksForRotation(self):
         self.block_grid[self.current_tetra[0][0]][self.current_tetra[0][1]].transform(5)

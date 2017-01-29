@@ -1,11 +1,17 @@
 #!/usr/bin/python
 
 from __future__ import print_function
-from multiprocessing import Process, Queue
 from webcam import Capture
+import threading
+import os
+import Queue
 
-import time
 
+q = Queue.Queue()
+
+#t = threading.Thread(target=os.system, args=("python tetrisGame.py",))
+t = threading.Thread(target=os.system, args=("python main_jump_redEnds.py",))
+t.start()
 
 foo = Capture()
 video = foo.main()
