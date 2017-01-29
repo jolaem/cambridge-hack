@@ -41,9 +41,9 @@ def get_faces_frame(img):
 def process_position(json):
 
     midx = 380
-    midy = 320
+    midy = 230
 
-    print json
+    print(json)
     try:
         face = json[0]
 
@@ -51,18 +51,30 @@ def process_position(json):
         #print(face["faceLandmarks"]["pupilLeft"]["y"])
         print(face["faceLandmarks"]["pupilRight"]["x"])
         #print(face["faceLandmarks"]["pupilRight"]["y"])
+        print(face["faceLandmarks"]["noseTip"]["x"])
+        print(face["faceLandmarks"]["noseTip"]["y"])
         leftx = face["faceLandmarks"]["pupilLeft"]["x"]
         #lefty=face["faceLandmarks"]["pupilLeft"]["y"]
         rightx = face["faceLandmarks"]["pupilRight"]["x"]
         #righty=face["faceLandmarks"]["pupilRight"]["y"]
+        x = face["faceLandmarks"]["noseTip"]["x"]
+        y = face["faceLandmarks"]["noseTip"]["y"]
 
         print("MIDX:", midx)#, "MIDY:", midy)
 
         # left turn
-        if leftx > midx:
+        """if leftx > midx:
             print("LEFT TURN")
         if rightx < midx:
+            print("RIGHT TURN")"""
+        if x > midx:
+            print("LEFT TURN")
+        if x < midx:
             print("RIGHT TURN")
+        if y > midy:
+            print("DOWN TURN")
+        if y < midy:
+            print("UP TURN")
 
     except:
         pass
