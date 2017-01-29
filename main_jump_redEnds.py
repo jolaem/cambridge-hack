@@ -5,7 +5,6 @@ import time
 import ctypes
 
 
-
 def get_pair(moveNum):
 	pair_ini = [0,1,2,3,4]
 	pair_new = [0,3,4,1,2]
@@ -328,7 +327,7 @@ Y = y_start
 
 game_finished = 0
 
-pygame.display.set_caption('Hello World!')
+pygame.display.set_caption('Football Dribbler')
 
 flag_activate = True
 flag_left = False
@@ -366,7 +365,7 @@ while True: # main game loop
                     if curr_segment >= n_segment:
                         curr_segment -=1
                         game_finished = 1
-                    break
+                    #break
 
          
             if flag_right == True  and curr_segment_direction == Direction.RIGHT:
@@ -377,7 +376,7 @@ while True: # main game loop
                     if curr_segment >= n_segment:
                         curr_segment -=1
                         game_finished = 1
-                    break
+                    #-break
 
             if flag_up == True  and curr_segment_direction == Direction.UP:
                 print flag_up
@@ -388,7 +387,7 @@ while True: # main game loop
                     if curr_segment >= n_segment:
                         curr_segment -=1                        
                         game_finished = 1
-                    break
+                    #break
 
             if flag_down == True  and curr_segment_direction == Direction.DOWN:
                 Y += speed
@@ -398,7 +397,7 @@ while True: # main game loop
                     if curr_segment >= n_segment:
                         curr_segment -=1
                         game_finished = 1
-                    break
+                    #break
 
             if flag_jump == True and curr_segment_direction == Direction.JUMP:
                 Y = curr_path.path[curr_segment].y_end
@@ -408,8 +407,13 @@ while True: # main game loop
                 if curr_segment >= n_segment:
                     curr_segment -=1
                     game_finished = 1
-                break
+                #break
 
+    if game_finished:
+        #ctypes.windll.user32.MessageBoxW(0, "Well done", "Message", 1)
+        time.sleep(1)
+        pygame.quit()
+        sys.exit()
     pygame.display.update()
 
     import glob, os
@@ -439,12 +443,9 @@ while True: # main game loop
                     flag_jump = inst[5]  # JolaOP_down
                     flag_jump = flag_jump == 'True'
 
-                    pygame.display.update()
-                    if game_finished:
-                        ctypes.windll.user32.MessageBoxW(0, "Well done", "Message", 1)
-                        pygame.quit()
-                        sys.exit()
-     #               time.sleep(1)
+                    #pygame.display.update()
+
+                    #time.sleep(1)
 
                     for event in pygame.event.get():
                         if event.type == QUIT:

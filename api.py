@@ -6,8 +6,10 @@ _maxNumRetries = 10
 
 _url_face = 'https://api.projectoxford.ai/face/v1.0/detect'
 _url_emotion = 'https://api.projectoxford.ai/emotion/v1.0/recognize'
-_face_key = "576ef033c83d4dc2b27cd1480129ecae"
-_emotion_key = "1fb3192517d04f36b73690f1170caa81"
+#_face_key = "576ef033c83d4dc2b27cd1480129ecae"
+_face_key = "2b80fddffaa14b859679d3faafe3d1b1"
+#_emotion_key = "1fb3192517d04f36b73690f1170caa81"
+_emotion_key = "96b5e8dc481c483a9a7d158ba10b1e17"
 
 def processRequest(api, json, data, headers, params):
     """

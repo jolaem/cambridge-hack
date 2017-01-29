@@ -5,7 +5,7 @@ import pygame
 from pygame. locals import *
 
 WAITING_TIME=0
-FPS=2
+FPS=4
 GRAY=(200,200,200)
 LIGHTBLUE=(204, 204, 255)
 WHITE=(255,255,255)
@@ -90,7 +90,7 @@ class Game(object):
         self.current_tetra=[]#will have 4 INDEXES of blocks stored in it
 
     def handleEvents(self):
-        for event in pygame.event.get():
+        """for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
         import glob, os
@@ -131,10 +131,10 @@ class Game(object):
 
             except:
                 pass
-        return True
+        return True"""
 
 
-        """for event in pygame.event.get():
+        for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
             elif event.type==pygame.KEYDOWN and self.current_tetra:
@@ -149,7 +149,7 @@ class Game(object):
                 elif event.key==pygame.K_UP:
                     self.rotateTetra()
                 pygame.time.set_timer(pygame.KEYDOWN, WAITING_TIME)
-        return True"""
+        return True
 
     def removeBlocksForRotation(self):
         self.block_grid[self.current_tetra[0][0]][self.current_tetra[0][1]].transform(5)
