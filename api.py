@@ -4,6 +4,11 @@ import time
 
 _maxNumRetries = 10
 
+_url_face = 'https://api.projectoxford.ai/face/v1.0/detect'
+_url_emotion = 'https://api.projectoxford.ai/emotion/v1.0/recognize'
+_face_key = "576ef033c83d4dc2b27cd1480129ecae"
+_emotion_key = "1fb3192517d04f36b73690f1170caa81"
+
 def processRequest(api, json, data, headers, params):
     """
     Helper function to process the request to Project Oxford
@@ -76,3 +81,39 @@ def processRequest(api, json, data, headers, params):
 
 def print_json(response):
     print(jjson.dumps(jjson.loads(response.text), indent=4))
+
+def get_faces_frame(img):
+
+    headers = dict()
+    headers['Ocp-Apim-Subscription-Key'] = _face_key
+    headers['Content-Type'] = 'application/octet-stream'
+
+    params = dict()
+    params['returnFaceId'] = 'true'
+    params['returnFaceLandmarks'] = 'true'
+    params['returnFaceAttributes'] = 'age'
+
+    json = None
+    data = img
+
+    result = processRequest(_url_face, json, data, headers, params)
+    #print("RESULTS:")
+    #print(jjson.dumps(result, indent=4))
+
+    return result
+
+def get_emotions_frame(img):
+    headers = dict()
+    headers['Ocp-Apim-Subscription-Key'] = _emotion_key
+    headers['Content-Type'] = 'application/octet-stream'
+
+    json = None
+    params = None
+    data = img
+
+    result = processRequest(_url_emotion, json, data, headers, params)
+
+    #print("RESULTS:")
+    #print(jjson.dumps(jjson.loads(result), indent=4))
+
+    return result

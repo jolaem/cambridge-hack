@@ -1,7 +1,7 @@
 import pygame
 import pygame.camera
 import ctypes
-from api import processRequest
+from api import get_faces_frame, get_emotions_frame
 import json as jjson
 from multiprocessing import Process
 from PIL import Image
@@ -13,54 +13,41 @@ from pygame.locals import *
 pygame.init()
 pygame.camera.init()
 
-_url_face = 'https://api.projectoxford.ai/face/v1.0/detect'
-_face_key = "576ef033c83d4dc2b27cd1480129ecae"
-
 THRESH = 50
 
-def get_faces_frame(img):
+def process_emotion(json):
 
-    headers = dict()
-    headers['Ocp-Apim-Subscription-Key'] = _face_key
-    headers['Content-Type'] = 'application/octet-stream'
+    try:
+        face = json[0]
 
-    params = dict()
-    params['returnFaceId'] = 'true'
-    params['returnFaceLandmarks'] = 'true'
-    params['returnFaceAttributes'] = 'age'
+        print("HAPPINESS:", face['scores']['happiness'])
+        print("SURPRISE:", face['scores']['surprise'])
 
-    json = None
-    data = img
-
-    result = processRequest(_url_face, json, data, headers, params)
-    #print("RESULTS:")
-    #print(jjson.dumps(result, indent=4))
-
-    return result
+    except:
+        pass
 
 def process_position(json):
 
     midx = 380
     midy = 230
 
-    print(json)
     try:
         face = json[0]
 
-        print(face["faceLandmarks"]["pupilLeft"]["x"])
+        print("MIDX:", midx)  # , "MIDY:", midy)
+
+        #print(face["faceLandmarks"]["pupilLeft"]["x"])
         #print(face["faceLandmarks"]["pupilLeft"]["y"])
-        print(face["faceLandmarks"]["pupilRight"]["x"])
+        #print(face["faceLandmarks"]["pupilRight"]["x"])
         #print(face["faceLandmarks"]["pupilRight"]["y"])
         print(face["faceLandmarks"]["noseTip"]["x"])
         print(face["faceLandmarks"]["noseTip"]["y"])
-        leftx = face["faceLandmarks"]["pupilLeft"]["x"]
+        #leftx = face["faceLandmarks"]["pupilLeft"]["x"]
         #lefty=face["faceLandmarks"]["pupilLeft"]["y"]
-        rightx = face["faceLandmarks"]["pupilRight"]["x"]
+        #rightx = face["faceLandmarks"]["pupilRight"]["x"]
         #righty=face["faceLandmarks"]["pupilRight"]["y"]
         x = face["faceLandmarks"]["noseTip"]["x"]
         y = face["faceLandmarks"]["noseTip"]["y"]
-
-        print("MIDX:", midx)#, "MIDY:", midy)
 
         # left turn
         """if leftx > midx:
@@ -122,8 +109,10 @@ class Capture(object):
                 from StringIO import StringIO
                 zdata = StringIO()
                 pil_image.save(zdata, 'JPEG')
-                result = get_faces_frame(zdata.getvalue())
-                process_position(result)
+                result_pos = get_faces_frame(zdata.getvalue())
+                result_emo = get_emotions_frame(zdata.getvalue())
+                process_position(result_pos)
+                process_emotion(result_emo)
 
 
         # blit it to the display surface.  simple!
