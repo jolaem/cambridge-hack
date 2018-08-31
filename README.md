@@ -2,10 +2,10 @@
 
 Microsoft Award winning hack from CambridgeHack Recurse 2017
 
-## Demo:
+### Demo:
 https://vimeo.com/201535797
 
-## Devpost:
+### Devpost:
 https://devpost.com/software/pain-in-the-neck
 
 ## Inspiration
